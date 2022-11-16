@@ -82,7 +82,8 @@ function pwtw_submit_options() {
 	    	echo '<option value="01"' . ($options['ffyd_qq_zhifu'] == '01' ? ' selected="selected"' : '') . '>开启</option>';
 	    	echo '</select>';
             
-            echo '<p><label>支付宝appid：<br/></label><input name="ffyd_zhifubao_appid" value="'.$options['ffyd_zhifubao_appid'].'"/></p>';
+			echo '<p><label>支付宝当面付appid：<br/></label><input name="ffyd_zhifubaodangmianfu_appid" value="'.$options['ffyd_zhifubaodangmianfu_appid'].'"/></p>';
+            echo '<p><label>支付宝应用appid：<br/></label><input name="ffyd_zhifubao_appid" value="'.$options['ffyd_zhifubao_appid'].'"/></p>';
             echo '<p><label>支付宝应用私钥：<br/></label><input name="ffyd_zhifubao_private_key" value="'.$options['ffyd_zhifubao_private_key'].'"/></p>';
             echo '<p><label>支付宝公钥：<br/></label><input name="ffyd_zhifubao_public_key" value="'.$options['ffyd_zhifubao_public_key'].'"/></p>';
             
@@ -125,6 +126,8 @@ function A2A_SHARE_SAVE_add_to_content1( $content ) {
     $options = get_option( 'zhinianpay_option');
     
     // 获取支付参数
+	
+    $dangmianfuAppid = $options['ffyd_zhifubaodangmianfu_appid'];
     $alipay_appid = $options['ffyd_zhifubao_appid'];
     $app_private_key = $options['ffyd_zhifubao_private_key'];
     $alipay_public_key = $options['ffyd_zhifubao_public_key'];
@@ -170,7 +173,7 @@ function A2A_SHARE_SAVE_add_to_content1( $content ) {
 	}
 	$bussId = $_COOKIE[$cookieName];
     
-    $form = '<form style="display:none;" target="_blank" action="https://dy.zhinianboke.com/pay/zhifu/ZhiFu001/init" method="post" id="subscribe_form"><input type="hidden" name="qqNum" value="'.$qqNum.'"><input type="hidden" name="alipay" value="'.$alipay.'"><input type="hidden" name="wxpay" value="'.$wxpay.'"><input type="hidden" name="qqpay" value="'.$qqpay.'"><input type="hidden" name="appId" value="'.$appId.'"><input type="hidden" name="mchId" value="'.$mchId.'"><input type="hidden" name="mchKey" value="'.$mchKey.'"><input type="hidden" id="ZhinianPay_cardId" name="cardId" value="'.$cardId.'"><input type="hidden" id="ZhinianPay_cookietime" value="'.$cookietime.'"><input type="hidden" name="orderName" value="文章付费阅读"><input type="hidden" id="ZhinianPay_cookieName" value="'.$cookieName.'"><input type="hidden" id="ZhinianPay_bussId" name="bussId" value="'.$bussId.'"><input type="hidden" name="orderDes" value="文章付费阅读"><input type="hidden" name="alipayAppid" value="'.$alipay_appid.'"><input type="hidden" name="alipayAppPrivateKey" value="'.$app_private_key.'"><input type="hidden" name="alipayPublicKey" value="'.$alipay_public_key.'"><input type="hidden" id="ZhinianPay_orderFee" name="orderFee" value="'.$money.'"><input type="hidden" name="returnUrl" value="'.$returnUrl.'"><input type="hidden" name="interfUrl" value="'.$yizhif_interfUrl.'"><input type="hidden" name="pid" value="'.$yizhifu_pid.'"><input type="hidden" name="miyao" value="'.$yizhifu_miyao.'"><input type="hidden" name="mazhifuInterfUrl" value="'.$mazhifu_interfUrl.'"><input type="hidden" name="mazhifuPid" value="'.$mazhifu_pid.'"><input type="hidden" name="mazhifuMiyao" value="'.$mazhifu_miyao.'"><input type="submit" value="" id="submit"></form>';
+    $form = '<form style="display:none;" target="_blank" action="https://dy.zhinianboke.com/pay/zhifu/ZhiFu001/init" method="post" id="subscribe_form"><input type="hidden" name="qqNum" value="'.$qqNum.'"><input type="hidden" name="alipay" value="'.$alipay.'"><input type="hidden" name="wxpay" value="'.$wxpay.'"><input type="hidden" name="qqpay" value="'.$qqpay.'"><input type="hidden" name="appId" value="'.$appId.'"><input type="hidden" name="mchId" value="'.$mchId.'"><input type="hidden" name="mchKey" value="'.$mchKey.'"><input type="hidden" id="ZhinianPay_cardId" name="cardId" value="'.$cardId.'"><input type="hidden" id="ZhinianPay_cookietime" value="'.$cookietime.'"><input type="hidden" name="orderName" value="文章付费阅读"><input type="hidden" id="ZhinianPay_cookieName" value="'.$cookieName.'"><input type="hidden" id="ZhinianPay_bussId" name="bussId" value="'.$bussId.'"><input type="hidden" name="orderDes" value="文章付费阅读"><input type="hidden" name="dangmianfuAppid" value="'.$dangmianfuAppid.'"><input type="hidden" name="alipayAppid" value="'.$alipay_appid.'"><input type="hidden" name="alipayAppPrivateKey" value="'.$app_private_key.'"><input type="hidden" name="alipayPublicKey" value="'.$alipay_public_key.'"><input type="hidden" id="ZhinianPay_orderFee" name="orderFee" value="'.$money.'"><input type="hidden" name="returnUrl" value="'.$returnUrl.'"><input type="hidden" name="interfUrl" value="'.$yizhif_interfUrl.'"><input type="hidden" name="pid" value="'.$yizhifu_pid.'"><input type="hidden" name="miyao" value="'.$yizhifu_miyao.'"><input type="hidden" name="mazhifuInterfUrl" value="'.$mazhifu_interfUrl.'"><input type="hidden" name="mazhifuPid" value="'.$mazhifu_pid.'"><input type="hidden" name="mazhifuMiyao" value="'.$mazhifu_miyao.'"><input type="submit" value="" id="submit"></form>';
     
     
     $replaceEnd = '<div id="zhinianpay_content" style="display: none;">'.$hideContent.'</div>';
