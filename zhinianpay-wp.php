@@ -110,6 +110,9 @@ function pwtw_submit_options() {
 }
 
 function A2A_SHARE_SAVE_add_to_content1( $content ) {
+    if (current_user_can('level_10')) {
+        return $content;
+    }
     $zhiniantempContent = $content;
     $zhiniantempContent = preg_replace('/{ZhinianPay[^}]*}/', 'ZhinianPayStart', $zhiniantempContent);
     $zhiniantempContent = preg_replace('/{\/ZhinianPay}/', 'ZhinianPayEnd', $zhiniantempContent);
@@ -127,31 +130,31 @@ function A2A_SHARE_SAVE_add_to_content1( $content ) {
     
     // 获取支付参数
 	
-    $dangmianfuAppid = $options['ffyd_zhifubaodangmianfu_appid'];
-    $alipay_appid = $options['ffyd_zhifubao_appid'];
-    $app_private_key = $options['ffyd_zhifubao_private_key'];
-    $alipay_public_key = $options['ffyd_zhifubao_public_key'];
+    $dangmianfuAppid = @$options['ffyd_zhifubaodangmianfu_appid'];
+    $alipay_appid = @$options['ffyd_zhifubao_appid'];
+    $app_private_key = @$options['ffyd_zhifubao_private_key'];
+    $alipay_public_key = @$options['ffyd_zhifubao_public_key'];
     
-    $appId = $options['ffyd_weixin_appid'];
-    $mchId = $options['ffyd_weixin_mchId'];
-    $mchKey = $options['ffyd_weixin_mchKey'];
+    $appId = @$options['ffyd_weixin_appid'];
+    $mchId = @$options['ffyd_weixin_mchId'];
+    $mchKey = @$options['ffyd_weixin_mchKey'];
     
-    $yizhif_interfUrl = $options['ffyd_yizhifu_interfUrl'];
-    $yizhifu_pid = $options['ffyd_yizhifu_pid'];
-    $yizhifu_miyao = $options['ffyd_yizhifu_miyao'];
+    $yizhif_interfUrl = @$options['ffyd_yizhifu_interfUrl'];
+    $yizhifu_pid = @$options['ffyd_yizhifu_pid'];
+    $yizhifu_miyao = @$options['ffyd_yizhifu_miyao'];
     
-    $mazhifu_interfUrl = $options['ffyd_mazhifu_interfUrl'];
-    $mazhifu_pid = $options['ffyd_mazhifu_pid'];
-    $mazhifu_miyao = $options['ffyd_mazhifu_miyao'];
+    $mazhifu_interfUrl = @$options['ffyd_mazhifu_interfUrl'];
+    $mazhifu_pid = @$options['ffyd_mazhifu_pid'];
+    $mazhifu_miyao = @$options['ffyd_mazhifu_miyao'];
     
     
-    $alipay = $options['ffyd_zhifubao_zhifu'];
-    $wxpay = $options['ffyd_weixin_zhifu'];
-    $qqpay = $options['ffyd_qq_zhifu'];
+    $alipay = @$options['ffyd_zhifubao_zhifu'];
+    $wxpay = @$options['ffyd_weixin_zhifu'];
+    $qqpay = @$options['ffyd_qq_zhifu'];
     
-    $qqNum = $options['ffyd_qq'];
-    $cardId = $options['ffyd_shouquanma'];
-    $cookietime = $options['ffyd_cookietime'];
+    $qqNum = @$options['ffyd_qq'];
+    $cardId = @$options['ffyd_shouquanma'];
+    $cookietime = @$options['ffyd_cookietime'];
     if(empty($cookietime)) {
         $cookietime = 1;
     }
@@ -167,11 +170,14 @@ function A2A_SHARE_SAVE_add_to_content1( $content ) {
         }
     }
     $cookieName =  'ZhinianPayCookie'.$new;
+    $randomCode = md5(uniqid(microtime(true),true));
     if(!isset($_COOKIE[$cookieName])) {
-		$randomCode = md5(uniqid(microtime(true),true));
-		setcookie($cookieName, $randomCode, time()+3600*24*$cookietime);
+	    setcookie($cookieName, $randomCode, time()+3600*24*$cookietime);
 	}
-	$bussId = $_COOKIE[$cookieName];
+	$bussId = @$_COOKIE[$cookieName];
+	if(empty($bussId)) {
+	    $bussId = $randomCode;
+	}
     
     $form = '<form style="display:none;" target="_blank" action="https://dy.zhinianboke.com/pay/zhifu/ZhiFu001/init" method="post" id="subscribe_form"><input type="hidden" name="qqNum" value="'.$qqNum.'"><input type="hidden" name="alipay" value="'.$alipay.'"><input type="hidden" name="wxpay" value="'.$wxpay.'"><input type="hidden" name="qqpay" value="'.$qqpay.'"><input type="hidden" name="appId" value="'.$appId.'"><input type="hidden" name="mchId" value="'.$mchId.'"><input type="hidden" name="mchKey" value="'.$mchKey.'"><input type="hidden" id="ZhinianPay_cardId" name="cardId" value="'.$cardId.'"><input type="hidden" id="ZhinianPay_cookietime" value="'.$cookietime.'"><input type="hidden" name="orderName" value="文章付费阅读"><input type="hidden" id="ZhinianPay_cookieName" value="'.$cookieName.'"><input type="hidden" id="ZhinianPay_bussId" name="bussId" value="'.$bussId.'"><input type="hidden" name="orderDes" value="文章付费阅读"><input type="hidden" name="dangmianfuAppid" value="'.$dangmianfuAppid.'"><input type="hidden" name="alipayAppid" value="'.$alipay_appid.'"><input type="hidden" name="alipayAppPrivateKey" value="'.$app_private_key.'"><input type="hidden" name="alipayPublicKey" value="'.$alipay_public_key.'"><input type="hidden" id="ZhinianPay_orderFee" name="orderFee" value="'.$money.'"><input type="hidden" name="returnUrl" value="'.$returnUrl.'"><input type="hidden" name="interfUrl" value="'.$yizhif_interfUrl.'"><input type="hidden" name="pid" value="'.$yizhifu_pid.'"><input type="hidden" name="miyao" value="'.$yizhifu_miyao.'"><input type="hidden" name="mazhifuInterfUrl" value="'.$mazhifu_interfUrl.'"><input type="hidden" name="mazhifuPid" value="'.$mazhifu_pid.'"><input type="hidden" name="mazhifuMiyao" value="'.$mazhifu_miyao.'"><input type="submit" value="" id="submit"></form>';
     
